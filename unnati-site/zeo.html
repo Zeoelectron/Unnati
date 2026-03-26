@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeo</title>
+
+<style>
+body {
+    margin: 0;
+    background: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.mobile-frame {
+    width: 390px;
+    height: 100vh;
+    max-height: 844px;
+    background: #cc5500; /* dark mango orange */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.zeo-text {
+    font-size: 6rem;
+    font-weight: 900;
+    font-family: Arial, sans-serif;
+    letter-spacing: 6px;
+
+    -webkit-text-stroke-width: 4px;
+
+    animation: blinkSwap 4s infinite;
+}
+
+/* Fill + border swap */
+@keyframes blinkSwap {
+
+    /* Most of the time */
+    0%, 50% {
+        color: #b266ff;                  /* purple fill */
+        -webkit-text-stroke-color: black; /* black border */
+    }
+
+    /* Quick snap */
+    50%, 75% {
+        color: black;                    /* black fill */
+        -webkit-text-stroke-color: #b266ff; /* purple border */
+    }
+
+    100% {
+        color: #b266ff;
+        -webkit-text-stroke-color: black;
+    }
+}
+
+.infinity {
+    stroke: black;
+    stroke-width: 8;
+    fill: none;
+}
+
+@media (max-width: 400px) {
+    .mobile-frame {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="mobile-frame">
+
+    <div class="zeo-text">zeo</div>
+
+    <svg width="220" height="140" viewBox="0 0 320 200">
+        <path 
+            d="
+              M 60 100
+              C 60 40, 140 40, 160 100
+              C 180 160, 260 160, 260 100
+              C 260 40, 180 40, 160 100
+              C 140 160, 60 160, 60 100
+            "
+            class="infinity"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+    </svg>
+
+</div>
+
+</body>
+</html>

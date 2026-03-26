@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Math & Physics Question Bank</title>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+
+    <style>
+      body { font-family: "Segoe UI", sans-serif; margin: 20px; background: #f9f9f9; }
+      h2 { color: #222; }
+      .filter-box { margin-bottom: 20px; }
+      .question {
+        background: white;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-left: 5px solid #0078d7;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      }
+      ol { margin-top: 0.5em; }
+      input, select, button { padding: 6px; margin-right: 10px; }
+      button { background: #0078d7; color: white; border: none; border-radius: 5px; cursor: pointer; }
+      button:hover { background: #005fa3; }
+      .q-buttons{
+margin-top:10px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.btn{
+padding:6px 10px;
+background:#0078d7;
+color:white;
+text-decoration:none;
+border-radius:5px;
+font-size:14px;
+}
+
+.btn:hover{
+background:#005fa3;
+}
+
+.answer{
+margin-top:8px;
+color:green;
+font-weight:bold;
+display:none;
+}
+    </style>
+  </head>
+  <body>
+    <h2>Math & Physics Question Bank</h2>
+
+    <div class="filter-box">
+      <input type="text" id="searchText" placeholder="Search questions..." />
+      <select id="topicFilter">
+        <option value="">All Topics</option>
+        <option value="integration">Integration</option>
+        <option value="binomial theorem">Binomial Theorem</option>
+      </select>
+      <select id="levelFilter">
+        <option value="">All Levels</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+      <button onclick="window.print()">Download as PDF</button>
+    </div>
+
+    <!-- ========== INTEGRATION QUESTION ========== -->
+
+    <div class="question" data-topic="integration" data-level="intermediate">
+      <p>
+        <b>Q.</b> The integral \( \int_{-\pi/2}^{\pi/2} \frac{dx}{\sin^6 x +
+        \cos^6 x} \) is equal to _________
+      </p>
+     
+</p>
+    </div>
+    <div class="question" data-topic="integration" data-level="intermediate">
+      <p><b>Q.</b> The integral is equal to</p>
+      <p>\[ \int \frac{2x^3 - 1}{x^4 + x} \, dx \]</p>
+      <ol type="A">
+        <li>
+          \( \frac{1}{2}\log_e \left| \frac{(x^3 + 1)^2}{x^3} \right| + C \)
+        </li>
+        <li>\( \log_e \left| \frac{x^3 + 1}{x^2} \right| + C \)</li>
+        <li>\( \frac{1}{2}\log_e \left| \frac{x^3 + 1}{x^2} \right| + C \)</li>
+        <li>\( \log_e \left| \frac{x^3 + 1}{x} \right| + C \)</li>
+      </ol>
+    </div>
+
+    <!-- ========== BINOMIAL THEOREM QUESTIONS ========== -->
+
+    <div
+      class="question"
+      data-topic="binomial theorem"
+      data-level="intermediate"
+    >
+      <p>
+        <b>Q1.</b> The number of terms in the expansion of \( (1 + x)^{21} \) is
+      </p>
+      <ol type="A">
+        <li>20</li>
+        <li>21</li>
+        <li>22</li>
+        <li>24</li>
+      </ol>
+    </div>
+
+    <div
+      class="question"
+      data-topic="binomial theorem"
+      data-level="intermediate"
+    >
+      <p>
+        <b>Q2.</b> The total number of terms in the expansion of \( (x +
+        a)^{100} + (x - a)^{100} \) is
+      </p>
+      <ol type="A">
+        <li>50</li>
+        <li>51</li>
+        <li>57</li>
+        <li>55</li>
+      </ol>
+    </div>
+
+    <div
+      class="question"
+      data-topic="binomial theorem"
+      data-level="intermediate"
+    >
+      <p>
+        <b>Q3.</b> The \( (n + 1)^{\text{th}} \) term from the end in \( \left(
+        x - \frac{1}{x} \right)^{3n} \) is
+      </p>
+      <ol type="A">
+        <li>\( ^{3n}C_n x^{-n} \)</li>
+        <li>\( (-1)^n {^{3n}C_n} x^{-n} \)</li>
+        <li>\( {^{3n}C_n} x^n \)</li>
+        <li>\( (-1)^n {^{3n}C_n} x^n \)</li>
+      </ol>
+    </div>
+
+    <div
+      class="question"
+      data-topic="binomial theorem"
+      data-level="intermediate"
+    >
+      <p>
+        <b>Q4.</b> If \( (1 + ax)^n = 1 + 8x + 24x^2 + \ldots \), then the
+        values of ‘a’ and ‘n’ are respectively
+      </p>
+      <ol type="A">
+        <li>2, 4</li>
+        <li>2, 3</li>
+        <li>3, 6</li>
+        <li>1, 2</li>
+      </ol>
+    </div>
+
+    <div
+      class="question"
+      data-topic="binomial theorem"
+      data-level="intermediate"
+    >
+      <p><b>Q5.</b> Expansion of \( (4 - 7x)^{-\frac{2}{5}} \) is valid if</p>
+      <ol type="A">
+        <li>\( x < \frac{4}{7} \)</li>
+        <li>\( x > \frac{4}{7} \)</li>
+        <li>\( -\frac{4}{7} < x < \frac{4}{7} \)</li>
+        <li>\( -\frac{4}{7} \le x \le \frac{4}{7} \)</li>
+      </ol>
+    </div>
+
+    <div
+      class="question"
+      data-topic="binomial theorem"
+      data-level="intermediate"
+    >
+      <p><b>Q6.</b> In the expansion of \( (2 - 3x)^{-1} \), the 3rd term is</p>
+      <ol type="A">
+        <li>\( \frac{9x^2}{4} \)</li>
+        <li>\( \frac{9x^2}{8} \)</li>
+        <li>\( \frac{27x^3}{4} \)</li>
+        <li>\( \frac{27x^3}{16} \)</li>
+      </ol>
+    </div>
+
+    <!-- ======== FILTER SCRIPT ======== -->
+    <script>
+
+      function toggleAnswer(btn){
+        const ans = btn.parentElement.querySelector('.answer');
+        if(ans.style.display === "none"){
+          ans.style.display = "block";
+          btn.innerText = "Hide Answer";
+        } else {
+          ans.style.display = "none";
+          btn.innerText = "Show Answer";
+        }
+      }
+
+      const searchText = document.getElementById('searchText');
+      const topicFilter = document.getElementById('topicFilter');
+      const levelFilter = document.getElementById('levelFilter');
+      const questions = document.querySelectorAll('.question');
+
+      function filterQuestions() {
+        const text = searchText.value.toLowerCase();
+        const topic = topicFilter.value.toLowerCase();
+        const level = levelFilter.value.toLowerCase();
+
+        questions.forEach(q => {
+          const content = q.textContent.toLowerCase();
+          const qTopic = q.getAttribute('data-topic').toLowerCase();
+          const qLevel = q.getAttribute('data-level').toLowerCase();
+
+          const matchText = content.includes(text);
+          const matchTopic = !topic || qTopic === topic;
+          const matchLevel = !level || qLevel === level;
+
+          q.style.display = (matchText && matchTopic && matchLevel) ? 'block' : 'none';
+        });
+      }
+
+      searchText.addEventListener('input', filterQuestions);
+      topicFilter.addEventListener('change', filterQuestions);
+      levelFilter.addEventListener('change', filterQuestions);
+    </script>
+  </body>
+</html>
