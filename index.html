@@ -40,23 +40,33 @@ body {
 
   background: azure;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px){
 
-  h2 {
-    font-size: 20px;
-    text-align: center;
+  body {
+    margin: 0;
+    padding: 0;
   }
 
   .question {
-    padding: 12px;
+    height: 100vh;                 /* full screen */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;       /* vertical center */
+    align-items: center;           /* horizontal center */
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-bottom: 1px solid #ddd;
   }
 
-  ol {
-    padding-left: 20px;
+  .question p, .question ol {
+    max-width: 90%;
   }
 
-  input, select, button {
-    flex: 100%;
+  .q-buttons {
+    justify-content: center;
   }
 
 }
@@ -77,7 +87,7 @@ if(ans.style.display === "none"){
 }
 </script>
 
-<div class="question-card">
+<div class="question" data-topic="kinematics" data-level="intermediate">
 
 <h3 class = "center">Conceptual questions to prepare you for JEE Mains, Advanced and IISER Aptitude Test</h3>
 <h4 class = "center">Powered by Unnati Center for Science and Culture</h4>
