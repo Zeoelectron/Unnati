@@ -1,12 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unnati Question Bank</title>
+
+<!-- MathJax -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
 <style>
 
+/* GENERAL */
+body {
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 10px;
+  background: azure;
+  line-height: 1.6;
+}
+
+.center {
+  text-align: center;
+}
+
+/* QUESTION CARD */
+.question {
+  background: white;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+/* OPTIONS */
+.options p {
+  margin: 6px 0;
+}
+
+/* BUTTONS */
 .q-buttons {
   margin-top: 10px;
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
-
 
 .btn {
   padding: 8px 12px;
@@ -19,27 +55,19 @@
   cursor: pointer;
 }
 
-
-.btn:hover{
-background:#005fa3;
+.btn:hover {
+  background: #005fa3;
 }
 
-.answer{
-margin-top:8px;
-color:green;
-font-weight:bold;
-display:none;
+/* ANSWER */
+.answer {
+  margin-top: 8px;
+  color: green;
+  font-weight: bold;
+  display: none;
 }
-.center{
-text-align:center;
-}
-body {
-     font-family: "Segoe UI", sans-serif;
-  margin: 0;
-  padding: 10px;
 
-  background: azure;
-}
+/* MOBILE FULL SCREEN MODE */
 @media (max-width: 600px){
 
   html, body {
@@ -49,10 +77,7 @@ body {
     scroll-snap-type: y mandatory;
   }
 
-  body {
-    background: #eaf7f0;
-  }
-
+  /* Hide filters later if added */
   .filter-box {
     display: none;
   }
@@ -62,49 +87,53 @@ body {
     width: 100%;
     box-sizing: border-box;
 
-    margin: 0;
-    padding: 20px;
-
-    border-radius: 0;
-    border-left: none;
+    overflow-y: auto;  /* 🔥 key fix */
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+
+    padding: 20px;
+    margin: 0;
+    border-radius: 0;
 
     text-align: center;
 
     scroll-snap-align: start;
   }
 
-  .question p,
-  .question ol {
+  .question p {
     max-width: 95%;
   }
 
 }
+
 </style>
-<!-- MATHJAX -->
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
 <script>
-    
 function toggleAnswer(btn){
-const ans = btn.nextElementSibling;
-if(ans.style.display === "none"){
-  ans.style.display = "block";
-  btn.innerText = "Hide Answer";
-}else{
-  ans.style.display = "none";
-  btn.innerText = "Show Answer";
-}
+  const ans = btn.parentElement.querySelector('.answer');
+  if(ans.style.display === "none"){
+    ans.style.display = "block";
+    btn.innerText = "Hide Answer";
+  } else {
+    ans.style.display = "none";
+    btn.innerText = "Show Answer";
+  }
 }
 </script>
 
-<div class="question" data-topic="kinematics" data-level="intermediate">
+</head>
 
-<h3 class = "center">Conceptual questions to prepare you for JEE Mains, Advanced and IISER Aptitude Test</h3>
-<h4 class = "center">Powered by Unnati Center for Science and Culture</h4>
+<body>
+
+<!-- HEADER -->
+<h3 class="center">Conceptual questions to prepare you for JEE Mains, Advanced and IISER Aptitude Test</h3>
+<h4 class="center">Powered by Unnati Center for Science and Culture</h4>
+
+<!-- QUESTION 1 -->
+<div class="question">
 
 <p>
 A projectile is launched at an angle \( \alpha \) with the horizontal with a velocity 
@@ -120,32 +149,26 @@ A projectile is launched at an angle \( \alpha \) with the horizontal with a vel
 <p>(D) \( 2\tan\alpha + 5\sec\alpha \)</p>
 </div>
 
-
-
-
-<!-- BUTTONS -->
 <div class="q-buttons">
 
-<button onclick="toggleAnswer(this)" class = "btn">Show Answer</button>
+<button onclick="toggleAnswer(this)" class="btn">Show Answer</button>
 
-<p class="answer" style="display:none; color:green;">
-Correct Answer: (B)
-</p>
+<p class="answer">Correct Answer: (B)</p>
 
-<a href="solution.pdf" target="_blank" class="btn">📄 View Solution (PDF)</a>
+<a href="solution.pdf" target="_blank" class="btn">View Solution (PDF)</a>
 
 <a href="https://youtube.com/your-video-link" target="_blank" class="btn">
-🎥 Watch Video Solution
+Watch Video Solution
 </a>
 
 </div>
 
 </div>
 
-<div class="question" data-topic="work energy" data-level="intermediate">
+<!-- QUESTION 2 -->
+<div class="question">
 
 <p>
-
 A block of mass \( m \) is pulled along a horizontal surface by applying a force 
 at an angle \( \theta \) with the horizontal. If the block travels with a uniform 
 velocity and has a displacement \( d \), and the coefficient of friction is \( \mu \), 
@@ -153,25 +176,27 @@ then the work done by the applied force is:
 </p>
 
 <div class="options">
-<p> (A)\( \frac{\mu mgd}{\cos\theta + \mu \sin\theta} \)</p>
-<p>(B)\( \frac{\mu mgd \cos\theta}{\cos\theta + \mu \sin\theta} \)</p>
-<p>(C)\( \frac{\mu mgd \sin\theta}{\cos\theta + \mu \sin\theta} \)</p>
-<p>(D)\( \frac{\mu mgd \cos\theta}{\cos\theta - \mu \sin\theta} \)</p>
+<p>(A) \( \frac{\mu mgd}{\cos\theta + \mu \sin\theta} \)</p>
+<p>(B) \( \frac{\mu mgd \cos\theta}{\cos\theta + \mu \sin\theta} \)</p>
+<p>(C) \( \frac{\mu mgd \sin\theta}{\cos\theta + \mu \sin\theta} \)</p>
+<p>(D) \( \frac{\mu mgd \cos\theta}{\cos\theta - \mu \sin\theta} \)</p>
 </div>
 
 <div class="q-buttons">
 
 <button onclick="toggleAnswer(this)" class="btn">Show Answer</button>
+
 <p class="answer">Correct Answer: (A)</p>
 
-
-<a href="solutions/forceWork.pdf" target="_blank" class="btn">📄 View Solution (PDF)</a>
+<a href="solutions/forceWork.pdf" target="_blank" class="btn">View Solution (PDF)</a>
 
 <a href="https://youtube.com/yourlink" target="_blank" class="btn">
-🎥 Watch Video Solution
+Watch Video Solution
 </a>
 
 </div>
 
-
 </div>
+
+</body>
+</html>
