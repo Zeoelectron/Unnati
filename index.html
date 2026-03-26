@@ -22,27 +22,43 @@ body {
 .center {
   text-align: center;
 }
-
-/* QUESTION CARD */
 .question {
-  background: white;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 8px;
+ 
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+
 }
+
+.q-content {
+  flex: 1;                 /* takes top space */
+  overflow-y: auto;
+}
+
+.q-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.q-display {
+  height: 40%;             /* bottom area */
+  background: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
 
 /* OPTIONS */
 .options p {
   margin: 6px 0;
 }
 
-/* BUTTONS */
-.q-buttons {
-  margin-top: 10px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+
+
 
 .btn {
   padding: 8px 12px;
@@ -78,7 +94,7 @@ body {
   }
 
   .question {
-    height: 100vh;
+    height: 100dvh;
     width: 100%;
 
     display: flex;
@@ -88,7 +104,7 @@ body {
     padding: 20px;
     box-sizing: border-box;
 
-    overflow-y: auto;
+   
 
     scroll-snap-align: start;
   }
@@ -102,7 +118,7 @@ body {
     text-align: left;
   }
 
-  .q-buttons {
+  .q-controls {
     justify-content: center;
   }
 
@@ -110,6 +126,24 @@ body {
 </style>
 
 <script>
+    
+function loadPDF(btn){
+  const container = btn.closest('.question').querySelector('.q-display');
+  container.innerHTML = `
+    <iframe src="solutions/forceWork.pdf" width="100%" height="100%"></iframe>
+  `;
+}
+
+function loadVideo(btn){
+  const container = btn.closest('.question').querySelector('.q-display');
+  container.innerHTML = `
+    <iframe width="100%" height="100%"
+    src="https://www.youtube.com/embed/YuGQiiy8L-A"
+    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen></iframe>
+  `;
+}
+
 function toggleAnswer(btn){
   const ans = btn.parentElement.querySelector('.answer');
   if(ans.style.display === "none"){
@@ -148,19 +182,17 @@ A projectile is launched at an angle \( \alpha \) with the horizontal with a vel
 </div>
 </div>
 
-<div class="q-buttons">
+<div class="q-controls">
+    <button onclick="toggleAnswer(this)" class="btn">Show Answer</button>
 
-<button onclick="toggleAnswer(this)" class="btn">Show Answer</button>
+    <button onclick="loadPDF(this)" class="btn">PDF Solution</button>
 
-<p class="answer">Correct Answer: (B)</p>
+    <button onclick="loadVideo(this)" class="btn">Video Solution</button>
 
-<a href="solution.pdf" target="_blank" class="btn">View Solution (PDF)</a>
+    <p class="answer">Correct Answer: (B)</p>
+  </div>
 
-<a href="https://youtube.com/your-video-link" target="_blank" class="btn">
-Watch Video Solution
-</a>
-
-</div>
+  <div class="q-display"></div>
 
 </div>
 
@@ -181,19 +213,17 @@ then the work done by the applied force is:
 <p>(D) \( \frac{\mu mgd \cos\theta}{\cos\theta - \mu \sin\theta} \)</p>
 </div>
 </div>
-<div class="q-buttons">
+<div class="q-controls">
+    <button onclick="toggleAnswer(this)" class="btn">Show Answer</button>
 
-<button onclick="toggleAnswer(this)" class="btn">Show Answer</button>
+    <button onclick="loadPDF(this)" class="btn">PDF Solution</button>
 
-<p class="answer">Correct Answer: (A)</p>
+    <button onclick="loadVideo(this)" class="btn">Video Solution</button>
 
-<a href="solutions/forceWork.pdf" target="_blank" class="btn">View Solution (PDF)</a>
+    <p class="answer">Correct Answer: (B)</p>
+  </div>
 
-<a href="https://youtube.com/yourlink" target="_blank" class="btn">
-Watch Video Solution
-</a>
-
-</div>
+  <div class="q-display"></div>
 
 </div>
 
