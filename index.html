@@ -71,41 +71,39 @@ body {
 @media screen and (max-width: 768px){
 
   html, body {
-    background:lightgreen;
     margin: 0;
     padding: 0;
     height: 100%;
-    width: 100%;
-    overflow-x: hidden;
     scroll-snap-type: y mandatory;
-  }
-
-  body {
-    background: azure;
   }
 
   .question {
     height: 100vh;
-    width: 100vw;
+    width: 100%;
 
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     padding: 20px;
     box-sizing: border-box;
 
     overflow-y: auto;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-
-    text-align: center;
-
     scroll-snap-align: start;
   }
 
-  .question p {
-    max-width: 95%;
+  .q-content {
+    flex-grow: 1;
+  }
+
+  .question p,
+  .options {
+    text-align: left;
+  }
+
+  .q-buttons {
+    justify-content: center;
   }
 
 }
@@ -134,7 +132,7 @@ function toggleAnswer(btn){
 
 <!-- QUESTION 1 -->
 <div class="question">
-
+<div class = "q-content">
 <p>
 A projectile is launched at an angle \( \alpha \) with the horizontal with a velocity 
 \( 20\,\text{m s}^{-1} \). After \( 10\,\text{s} \), its inclination with the horizontal is 
@@ -147,6 +145,7 @@ A projectile is launched at an angle \( \alpha \) with the horizontal with a vel
 <p>(B) \( \tan\alpha - 5\sec\alpha \)</p>
 <p>(C) \( 2\tan\alpha - 5\sec\alpha \)</p>
 <p>(D) \( 2\tan\alpha + 5\sec\alpha \)</p>
+</div>
 </div>
 
 <div class="q-buttons">
@@ -167,7 +166,7 @@ Watch Video Solution
 
 <!-- QUESTION 2 -->
 <div class="question">
-
+<div class = "q-content">
 <p>
 A block of mass \( m \) is pulled along a horizontal surface by applying a force 
 at an angle \( \theta \) with the horizontal. If the block travels with a uniform 
@@ -181,7 +180,7 @@ then the work done by the applied force is:
 <p>(C) \( \frac{\mu mgd \sin\theta}{\cos\theta + \mu \sin\theta} \)</p>
 <p>(D) \( \frac{\mu mgd \cos\theta}{\cos\theta - \mu \sin\theta} \)</p>
 </div>
-
+</div>
 <div class="q-buttons">
 
 <button onclick="toggleAnswer(this)" class="btn">Show Answer</button>
