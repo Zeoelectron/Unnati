@@ -1,0 +1,3024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JEE Projectile Motion — Single Screen Simulator</title>
+
+<!-- =========================================================
+     MATHJAX
+========================================================= -->
+<script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+    },
+    svg: {
+        fontCache: 'global'
+    }
+};
+</script>
+
+<script async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #eef2f7;
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   MAIN APP
+========================================================= */
+
+.app {
+    width: 100vw;
+    height: 100vh;
+
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    height: 52px;
+    flex: 0 0 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 12px 6px;
+}
+
+.title-area h1 {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.1;
+}
+
+.title-area p {
+    margin: 3px 0 0;
+    color: #667085;
+    font-size: 12px;
+}
+
+.header-badge {
+    padding: 6px 10px;
+    background: #ffffff;
+    border-radius: 7px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   MAIN SINGLE-SCREEN LAYOUT
+========================================================= */
+
+.main {
+    flex: 1;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(220px, 0.95fr)
+        minmax(500px, 2.7fr)
+        minmax(240px, 1.05fr);
+
+    gap: 10px;
+}
+
+
+/* =========================================================
+   COMMON CARD
+========================================================= */
+
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.07);
+
+    min-width: 0;
+    min-height: 0;
+}
+
+
+/* =========================================================
+   LEFT CONTROL COLUMN
+========================================================= */
+
+.controls {
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: bold;
+
+    margin-bottom: 8px;
+}
+
+
+/* Projectile cards */
+
+.projectile-card {
+    border-radius: 8px;
+    padding: 9px;
+
+    margin-bottom: 8px;
+
+    background: #f8fafc;
+    border: 1px solid #e7eaf0;
+}
+
+.projectile-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+}
+
+.projectile-name {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.projectile-color {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.red-dot {
+    background: #e53935;
+}
+
+.blue-dot {
+    background: #1976d2;
+}
+
+
+.control {
+    margin-bottom: 8px;
+}
+
+.control:last-child {
+    margin-bottom: 0;
+}
+
+.control-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
+.control-value {
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 4px;
+    background: #ffffff;
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 17px;
+    margin: 0;
+}
+
+
+/* =========================================================
+   SMALL STAT GRID
+========================================================= */
+
+.mini-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+
+    margin-top: 7px;
+}
+
+.mini-stat {
+    padding: 4px 5px;
+
+    border-radius: 5px;
+
+    background: #ffffff;
+
+    font-size: 9px;
+}
+
+.mini-stat-label {
+    color: #667085;
+}
+
+.mini-stat-value {
+    font-weight: bold;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   GLOBAL BUTTONS
+========================================================= */
+
+.button-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+
+    margin-top: 3px;
+}
+
+button {
+    border: none;
+    border-radius: 6px;
+
+    padding: 7px 3px;
+
+    background: #263238;
+    color: white;
+
+    font-size: 10px;
+
+    cursor: pointer;
+}
+
+button:hover {
+    background: #111827;
+}
+
+
+/* =========================================================
+   TOGGLES
+========================================================= */
+
+.options {
+    margin-top: 7px;
+    padding-top: 7px;
+
+    border-top: 1px solid #e7eaf0;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-bottom: 5px;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   SPEED
+========================================================= */
+
+.speed-box {
+    margin-top: auto;
+
+    padding-top: 7px;
+
+    border-top: 1px solid #e7eaf0;
+}
+
+.speed-label {
+    display: flex;
+    justify-content: space-between;
+
+    font-size: 10px;
+    margin-bottom: 2px;
+}
+
+
+/* =========================================================
+   CENTRAL GRAPH
+========================================================= */
+
+.graph-card {
+    padding: 6px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.graph-title {
+    height: 22px;
+    flex: 0 0 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 6px;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.canvas-container {
+    flex: 1;
+    min-height: 0;
+
+    position: relative;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    background: #ffffff;
+    border-radius: 7px;
+}
+
+.graph-legend {
+    position: absolute;
+
+    top: 8px;
+    right: 10px;
+
+    background: rgba(255,255,255,0.92);
+
+    border-radius: 5px;
+
+    padding: 5px 7px;
+
+    font-size: 10px;
+
+    box-shadow:
+        0 1px 4px rgba(0,0,0,0.08);
+}
+
+.legend-item {
+    margin-left: 8px;
+}
+
+.legend-item:first-child {
+    margin-left: 0;
+}
+
+.legend-dot {
+    display: inline-block;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    margin-right: 3px;
+}
+
+
+/* =========================================================
+   RIGHT INFORMATION COLUMN
+========================================================= */
+
+.info {
+    padding: 9px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.info-heading {
+    font-size: 14px;
+    font-weight: bold;
+
+    margin-bottom: 7px;
+}
+
+
+/* Live state cards */
+
+.live-card {
+    border-radius: 7px;
+
+    padding: 7px;
+
+    background: #f8fafc;
+
+    margin-bottom: 6px;
+
+    border-left: 3px solid;
+}
+
+.live-red {
+    border-left-color: #e53935;
+}
+
+.live-blue {
+    border-left-color: #1976d2;
+}
+
+.live-title {
+    font-size: 11px;
+    font-weight: bold;
+
+    margin-bottom: 4px;
+}
+
+.live-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 3px 7px;
+
+    font-size: 9px;
+}
+
+.live-grid strong {
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   EQUATIONS
+========================================================= */
+
+.equations {
+    margin-top: 2px;
+
+    padding-top: 6px;
+
+    border-top: 1px solid #e7eaf0;
+
+    flex: 1;
+
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.equation-title {
+    font-size: 11px;
+    font-weight: bold;
+
+    margin-bottom: 4px;
+}
+
+.equation {
+    background: #f8fafc;
+
+    border-radius: 5px;
+
+    padding: 2px 4px;
+
+    margin-bottom: 3px;
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   SPECIAL STATUS BAR
+========================================================= */
+
+.status {
+    margin-top: 4px;
+
+    padding: 5px 7px;
+
+    background: #f8fafc;
+
+    border-radius: 5px;
+
+    font-size: 9px;
+
+    color: #667085;
+}
+
+.status strong {
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   VERY SMALL LAPTOP SCREENS
+========================================================= */
+
+@media (max-height: 700px) {
+
+    .app {
+        padding: 6px;
+    }
+
+    .header {
+        height: 43px;
+        flex-basis: 43px;
+    }
+
+    .title-area h1 {
+        font-size: 20px;
+    }
+
+    .title-area p {
+        font-size: 10px;
+    }
+
+    .projectile-card {
+        padding: 7px;
+        margin-bottom: 5px;
+    }
+
+    .controls,
+    .info {
+        padding: 7px;
+    }
+
+    .formula {
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   NARROW SCREEN
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    html,
+    body {
+        overflow: auto;
+    }
+
+    .app {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .graph-card {
+        height: 550px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="header">
+
+        <div class="title-area">
+
+            <h1>
+                JEE Projectile Motion
+            </h1>
+
+            <p>
+                Two-projectile interactive physics simulator
+                • Ideal motion • No air resistance
+            </p>
+
+        </div>
+
+
+        <div class="header-badge">
+            \(g = 9.81\,\mathrm{m/s^2}\)
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+
+        <!-- =================================================
+             LEFT: CONTROLS
+        ================================================== -->
+
+        <section class="card controls">
+
+            <div class="section-title">
+                Projectile Parameters
+            </div>
+
+
+            <!-- Projectile 1 -->
+
+            <div class="projectile-card">
+
+                <div class="projectile-heading">
+
+                    <div class="projectile-name">
+                        <span class="projectile-color red-dot"></span>
+                        Projectile 1
+                    </div>
+
+                    <span class="red">
+                        P₁
+                    </span>
+
+                </div>
+
+
+                <!-- Velocity -->
+
+                <div class="control">
+
+                    <div class="control-label">
+
+                        <span>
+                            Initial velocity \(u_1\)
+                        </span>
+
+                        <span
+                            class="control-value"
+                            id="u1Display">
+                            30 m/s
+                        </span>
+
+                    </div>
+
+                    <input
+                        id="u1"
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value="30"
+                    >
+
+                </div>
+
+
+                <!-- Angle -->
+
+                <div class="control">
+
+                    <div class="control-label">
+
+                        <span>
+                            Angle \(\theta_1\)
+                        </span>
+
+                        <span
+                            class="control-value"
+                            id="theta1Display">
+                            45°
+                        </span>
+
+                    </div>
+
+                    <input
+                        id="theta1"
+                        type="range"
+                        min="0"
+                        max="90"
+                        step="1"
+                        value="45"
+                    >
+
+                </div>
+
+
+                <!-- Stats -->
+
+                <div class="mini-stats">
+
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">
+                            \(T\)
+                        </div>
+                        <div
+                            class="mini-stat-value"
+                            id="T1">
+                            0 s
+                        </div>
+                    </div>
+
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">
+                            \(H_{\max}\)
+                        </div>
+                        <div
+                            class="mini-stat-value"
+                            id="H1">
+                            0 m
+                        </div>
+                    </div>
+
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">
+                            \(R\)
+                        </div>
+                        <div
+                            class="mini-stat-value"
+                            id="R1">
+                            0 m
+                        </div>
+                    </div>
+
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">
+                            \(t_H\)
+                        </div>
+                        <div
+                            class="mini-stat-value"
+                            id="tH1">
+                            0 s
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Projectile 2 -->
+
+            <div class="projectile-card">
+
+                <div class="projectile-heading">
+
+                    <div class="projectile-name">
+                        <span class="projectile-color blue-dot"></span>
+                        Projectile 2
+                    </div>
+
+                    <span class="blue">
+                        P₂
+                    </span>
+
+                </div>
+
+
+                <!-- Velocity -->
+
+                <div class="control">
+
+                    <div class="control-label">
+
+                        <span>
+                            Initial velocity \(u_2\)
+                        </span>
+
+                        <span
+                            class="control-value"
+                            id="u2Display">
+                            30 m/s
+                        </span>
+
+                    </div>
+
+                    <input
+                        id="u2"
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value="30"
+                    >
+
+                </div>
+
+
+                <!-- Angle -->
+
+                <div class="control">
+
+                    <div class="control-label">
+
+                        <span>
+                            Angle \(\theta_2\)
+                        </span>
+
+                        <span
+                            class="control-value"
+                            id="theta2Display">
+                            60°
+                        </span>
+
+                    </div>
+
+                    <input
+                        id="theta2"
+                        type="range"
+                        min="0"
+                        max="90"
+                        step="1"
+                        value="60"
+                    >
+
+                </div>
+
+
+                <!-- Stats -->
+
+                <div class="mini-stats">
+
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">
+                            \(T\)
+                        </div>
+                        <div
+                            class="mini-stat-value"
+                            id="T2">
+                            0 s
+                        </div>
+                    </div>
+
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">
+                            \(H_{\max}\)
+                        </div>
+                        <div
+                            class="mini-stat-value"
+                            id="H2">
+                            0 m
+                        </div>
+                    </div>
+
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">
+                            \(R\)
+                        </div>
+                        <div
+                            class="mini-stat-value"
+                            id="R2">
+                            0 m
+                        </div>
+                    </div>
+
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">
+                            \(t_H\)
+                        </div>
+                        <div
+                            class="mini-stat-value"
+                            id="tH2">
+                            0 s
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Buttons -->
+
+            <div class="button-row">
+
+                <button id="restartBtn">
+                    ↻ Restart
+                </button>
+
+                <button id="pauseBtn">
+                    ⏸ Pause
+                </button>
+
+                <button id="resumeBtn">
+                    ▶ Resume
+                </button>
+
+            </div>
+
+
+
+            <!-- Options -->
+
+            <div class="options">
+
+                <label class="option">
+                    <input
+                        type="checkbox"
+                        id="vectorToggle"
+                        checked
+                    >
+                    Velocity vectors
+                </label>
+
+                <label class="option">
+                    <input
+                        type="checkbox"
+                        id="componentToggle"
+                        checked
+                    >
+                    \(v_x,\ v_y\) components
+                </label>
+
+                <label class="option">
+                    <input
+                        type="checkbox"
+                        id="resultToggle"
+                        checked
+                    >
+                    \(H_{\max}\) and \(R\)
+                </label>
+
+            </div>
+
+
+
+            <!-- Speed -->
+
+            <div class="speed-box">
+
+                <div class="speed-label">
+
+                    <span>
+                        Animation speed
+                    </span>
+
+                    <strong id="speedDisplay">
+                        0.60×
+                    </strong>
+
+                </div>
+
+                <input
+                    id="speedSlider"
+                    type="range"
+                    min="0.20"
+                    max="1.20"
+                    step="0.05"
+                    value="0.60"
+                >
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             CENTRE: VISUALIZATION
+        ================================================== -->
+
+        <section class="card graph-card">
+
+            <div class="graph-title">
+
+                <span>
+                    Trajectory Visualization
+                </span>
+
+                <span>
+                    \(x-y\) plane
+                </span>
+
+            </div>
+
+
+            <div class="canvas-container">
+
+                <canvas id="canvas"></canvas>
+
+
+                <div class="graph-legend">
+
+                    <span class="legend-item">
+                        <span
+                            class="legend-dot"
+                            style="background:#e53935">
+                        </span>
+                        \(P_1\)
+                    </span>
+
+                    <span class="legend-item">
+                        <span
+                            class="legend-dot"
+                            style="background:#1976d2">
+                        </span>
+                        \(P_2\)
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             RIGHT: LIVE PHYSICS
+        ================================================== -->
+
+        <section class="card info">
+
+            <div class="info-heading">
+                Instantaneous Physics
+            </div>
+
+
+            <!-- P1 -->
+
+            <div class="live-card live-red">
+
+                <div class="live-title red">
+                    Projectile 1
+                </div>
+
+                <div class="live-grid">
+
+                    <div>
+                        \(t\)
+                    </div>
+
+                    <strong id="liveT1">
+                        0.00 s
+                    </strong>
+
+
+                    <div>
+                        \(x\)
+                    </div>
+
+                    <strong>
+                        <span id="liveX1">0</span> m
+                    </strong>
+
+
+                    <div>
+                        \(y\)
+                    </div>
+
+                    <strong>
+                        <span id="liveY1">0</span> m
+                    </strong>
+
+
+                    <div>
+                        \(v_x\)
+                    </div>
+
+                    <strong>
+                        <span id="liveVx1">0</span>
+                        m/s
+                    </strong>
+
+
+                    <div>
+                        \(v_y\)
+                    </div>
+
+                    <strong>
+                        <span id="liveVy1">0</span>
+                        m/s
+                    </strong>
+
+
+                    <div>
+                        Speed
+                    </div>
+
+                    <strong id="liveSpeed1">
+                        0 m/s
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- P2 -->
+
+            <div class="live-card live-blue">
+
+                <div class="live-title blue">
+                    Projectile 2
+                </div>
+
+                <div class="live-grid">
+
+                    <div>
+                        \(t\)
+                    </div>
+
+                    <strong id="liveT2">
+                        0.00 s
+                    </strong>
+
+
+                    <div>
+                        \(x\)
+                    </div>
+
+                    <strong>
+                        <span id="liveX2">0</span> m
+                    </strong>
+
+
+                    <div>
+                        \(y\)
+                    </div>
+
+                    <strong>
+                        <span id="liveY2">0</span> m
+                    </strong>
+
+
+                    <div>
+                        \(v_x\)
+                    </div>
+
+                    <strong>
+                        <span id="liveVx2">0</span>
+                        m/s
+                    </strong>
+
+
+                    <div>
+                        \(v_y\)
+                    </div>
+
+                    <strong>
+                        <span id="liveVy2">0</span>
+                        m/s
+                    </strong>
+
+
+                    <div>
+                        Speed
+                    </div>
+
+                    <strong id="liveSpeed2">
+                        0 m/s
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Equations -->
+
+            <div class="equations">
+
+                <div class="equation-title">
+                    JEE Core Equations
+                </div>
+
+
+                <div class="equation">
+                    \(x=u\cos\theta\,t\)
+                </div>
+
+                <div class="equation">
+                    \(y=u\sin\theta\,t-\frac12gt^2\)
+                </div>
+
+                <div class="equation">
+                    \(v_x=u\cos\theta\)
+                </div>
+
+                <div class="equation">
+                    \(v_y=u\sin\theta-gt\)
+                </div>
+
+                <div class="equation">
+                    \(H_{\max}=
+                    \frac{u^2\sin^2\theta}{2g}\)
+                </div>
+
+                <div class="equation">
+                    \(T=
+                    \frac{2u\sin\theta}{g}\)
+                </div>
+
+                <div class="equation">
+                    \(R=
+                    \frac{u^2\sin2\theta}{g}\)
+                </div>
+
+            </div>
+
+
+
+            <div class="status">
+
+                <strong>Model:</strong>
+                Same launch and landing level.
+                Air resistance neglected.
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   CONSTANTS
+========================================================= */
+
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+const g = 9.81;
+
+
+/*
+    At 0.60× default speed the animation is deliberately
+    slow enough for classroom explanation.
+*/
+
+const BASE_DURATION = 12000;
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let animationStart = null;
+
+let animationProgress = 0;
+
+let paused = false;
+
+let pausedProgress = 0;
+
+let scale = null;
+
+
+/* =========================================================
+   CONTROLS
+========================================================= */
+
+const u1 =
+    document.getElementById("u1");
+
+const theta1 =
+    document.getElementById("theta1");
+
+const u2 =
+    document.getElementById("u2");
+
+const theta2 =
+    document.getElementById("theta2");
+
+const vectorToggle =
+    document.getElementById("vectorToggle");
+
+const componentToggle =
+    document.getElementById("componentToggle");
+
+const resultToggle =
+    document.getElementById("resultToggle");
+
+const speedSlider =
+    document.getElementById("speedSlider");
+
+const speedDisplay =
+    document.getElementById("speedDisplay");
+
+
+/* =========================================================
+   PHYSICS
+========================================================= */
+
+function createProjectile(
+    initialVelocity,
+    angleDeg
+) {
+
+    const theta =
+        angleDeg *
+        Math.PI /
+        180;
+
+
+    /*
+        u = 0:
+        projectile remains at origin.
+    */
+
+    if (initialVelocity === 0) {
+
+        return {
+
+            u: 0,
+
+            angleDeg,
+            theta,
+
+            ux: 0,
+            uy: 0,
+
+            T: 0,
+            H: 0,
+            R: 0,
+            tH: 0
+
+        };
+    }
+
+
+    const ux =
+        initialVelocity *
+        Math.cos(theta);
+
+    const uy =
+        initialVelocity *
+        Math.sin(theta);
+
+
+    const T =
+        2 * uy / g;
+
+    const H =
+        uy * uy / (2 * g);
+
+    const R =
+        ux * T;
+
+    const tH =
+        uy / g;
+
+
+    return {
+
+        u: initialVelocity,
+
+        angleDeg,
+        theta,
+
+        ux,
+        uy,
+
+        T,
+        H,
+        R,
+        tH
+
+    };
+}
+
+
+/* =========================================================
+   READ PARAMETERS
+========================================================= */
+
+function getData() {
+
+    return {
+
+        p1: createProjectile(
+            Number(u1.value),
+            Number(theta1.value)
+        ),
+
+        p2: createProjectile(
+            Number(u2.value),
+            Number(theta2.value)
+        )
+
+    };
+}
+
+
+/* =========================================================
+   UPDATE CONTROL VALUES
+========================================================= */
+
+function updateStats() {
+
+    const d =
+        getData();
+
+
+    /* P1 */
+
+    document.getElementById(
+        "u1Display"
+    ).textContent =
+        `${d.p1.u} m/s`;
+
+    document.getElementById(
+        "theta1Display"
+    ).textContent =
+        `${d.p1.angleDeg}°`;
+
+    document.getElementById(
+        "T1"
+    ).textContent =
+        `${d.p1.T.toFixed(2)} s`;
+
+    document.getElementById(
+        "H1"
+    ).textContent =
+        `${d.p1.H.toFixed(2)} m`;
+
+    document.getElementById(
+        "R1"
+    ).textContent =
+        `${d.p1.R.toFixed(2)} m`;
+
+    document.getElementById(
+        "tH1"
+    ).textContent =
+        `${d.p1.tH.toFixed(2)} s`;
+
+
+    /* P2 */
+
+    document.getElementById(
+        "u2Display"
+    ).textContent =
+        `${d.p2.u} m/s`;
+
+    document.getElementById(
+        "theta2Display"
+    ).textContent =
+        `${d.p2.angleDeg}°`;
+
+    document.getElementById(
+        "T2"
+    ).textContent =
+        `${d.p2.T.toFixed(2)} s`;
+
+    document.getElementById(
+        "H2"
+    ).textContent =
+        `${d.p2.H.toFixed(2)} m`;
+
+    document.getElementById(
+        "R2"
+    ).textContent =
+        `${d.p2.R.toFixed(2)} m`;
+
+    document.getElementById(
+        "tH2"
+    ).textContent =
+        `${d.p2.tH.toFixed(2)} s`;
+}
+
+
+/* =========================================================
+   CANVAS SIZE
+========================================================= */
+
+function resizeCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+
+    canvas.width =
+        Math.max(
+            1,
+            Math.round(
+                rect.width * dpr
+            )
+        );
+
+    canvas.height =
+        Math.max(
+            1,
+            Math.round(
+                rect.height * dpr
+            )
+        );
+
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+
+    draw();
+}
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* =========================================================
+   SCALE
+========================================================= */
+
+function getScale(data) {
+
+    const width =
+        canvas.clientWidth;
+
+    const height =
+        canvas.clientHeight;
+
+
+    const left =
+        58;
+
+    const right =
+        22;
+
+    const top =
+        25;
+
+    const bottom =
+        38;
+
+
+    let maxR =
+        Math.max(
+            data.p1.R,
+            data.p2.R
+        );
+
+    let maxH =
+        Math.max(
+            data.p1.H,
+            data.p2.H
+        );
+
+
+    /*
+        Critical zero-state protection.
+    */
+
+    if (
+        !Number.isFinite(maxR) ||
+        maxR <= 0
+    ) {
+        maxR = 10;
+    }
+
+    if (
+        !Number.isFinite(maxH) ||
+        maxH <= 0
+    ) {
+        maxH = 10;
+    }
+
+
+    return {
+
+        left,
+        right,
+        top,
+        bottom,
+
+        scaleX:
+            (width - left - right) /
+            (maxR * 1.12),
+
+        scaleY:
+            (height - top - bottom) /
+            (maxH * 1.15)
+
+    };
+}
+
+
+/* =========================================================
+   PHYSICAL → SCREEN
+========================================================= */
+
+function toScreen(
+    x,
+    y,
+    s
+) {
+
+    return {
+
+        x:
+            s.left +
+            x * s.scaleX,
+
+        y:
+            canvas.clientHeight -
+            s.bottom -
+            y * s.scaleY
+
+    };
+}
+
+
+/* =========================================================
+   GRID STEP
+========================================================= */
+
+function gridStep(value) {
+
+    if (value <= 20) return 2;
+
+    if (value <= 50) return 5;
+
+    if (value <= 100) return 10;
+
+    if (value <= 200) return 20;
+
+    if (value <= 500) return 50;
+
+    return 100;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+function drawGrid(
+    data,
+    s
+) {
+
+    const width =
+        canvas.clientWidth;
+
+    const height =
+        canvas.clientHeight;
+
+
+    let maxR =
+        Math.max(
+            data.p1.R,
+            data.p2.R
+        );
+
+    let maxH =
+        Math.max(
+            data.p1.H,
+            data.p2.H
+        );
+
+
+    if (maxR <= 0) {
+        maxR = 10;
+    }
+
+    if (maxH <= 0) {
+        maxH = 10;
+    }
+
+
+    maxR *= 1.12;
+    maxH *= 1.15;
+
+
+    const dx =
+        gridStep(maxR);
+
+    const dy =
+        gridStep(maxH);
+
+
+    ctx.save();
+
+    ctx.lineWidth = 1;
+
+    ctx.strokeStyle =
+        "#e9edf2";
+
+    ctx.fillStyle =
+        "#667085";
+
+    ctx.font =
+        "10px Arial";
+
+
+    /* Vertical */
+
+    for (
+        let x = 0;
+        x <= maxR;
+        x += dx
+    ) {
+
+        const p =
+            toScreen(
+                x,
+                0,
+                s
+            );
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            p.x,
+            15
+        );
+
+        ctx.lineTo(
+            p.x,
+            height - s.bottom
+        );
+
+        ctx.stroke();
+
+
+        if (x > 0) {
+
+            ctx.fillText(
+                x.toFixed(0),
+                p.x - 8,
+                height - 18
+            );
+        }
+    }
+
+
+    /* Horizontal */
+
+    for (
+        let y = 0;
+        y <= maxH;
+        y += dy
+    ) {
+
+        const p =
+            toScreen(
+                0,
+                y,
+                s
+            );
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            s.left,
+            p.y
+        );
+
+        ctx.lineTo(
+            width - 10,
+            p.y
+        );
+
+        ctx.stroke();
+
+
+        if (y > 0) {
+
+            ctx.fillText(
+                y.toFixed(0),
+                4,
+                p.y + 3
+            );
+        }
+    }
+
+
+    /* Axes */
+
+    const origin =
+        toScreen(
+            0,
+            0,
+            s
+        );
+
+
+    ctx.strokeStyle =
+        "#475467";
+
+    ctx.lineWidth = 1.8;
+
+
+    /* x-axis */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        s.left,
+        origin.y
+    );
+
+    ctx.lineTo(
+        width - 10,
+        origin.y
+    );
+
+    ctx.stroke();
+
+
+    /* y-axis */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        s.left,
+        height - s.bottom
+    );
+
+    ctx.lineTo(
+        s.left,
+        15
+    );
+
+    ctx.stroke();
+
+
+    ctx.font =
+        "bold 11px Arial";
+
+    ctx.fillStyle =
+        "#344054";
+
+
+    ctx.fillText(
+        "x",
+        width - 18,
+        height - 9
+    );
+
+
+    ctx.fillText(
+        "y",
+        s.left - 5,
+        13
+    );
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   POSITION
+========================================================= */
+
+function getPosition(
+    p,
+    t
+) {
+
+    const x =
+        p.ux * t;
+
+    const rawY =
+        p.uy * t -
+        0.5 * g * t * t;
+
+
+    return {
+
+        x,
+
+        y:
+            Math.max(
+                0,
+                rawY
+            )
+
+    };
+}
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+function getState(
+    p,
+    t
+) {
+
+    const position =
+        getPosition(
+            p,
+            t
+        );
+
+
+    const vx =
+        p.ux;
+
+    const vy =
+        p.uy -
+        g * t;
+
+
+    const speed =
+        Math.sqrt(
+            vx * vx +
+            vy * vy
+        );
+
+
+    return {
+
+        x: position.x,
+        y: position.y,
+
+        vx,
+        vy,
+
+        speed
+
+    };
+}
+
+
+/* =========================================================
+   GHOST TRAJECTORY
+========================================================= */
+
+function drawGhostTrajectory(
+    p,
+    color,
+    s
+) {
+
+    if (p.T <= 0) {
+        return;
+    }
+
+
+    const N = 180;
+
+
+    ctx.save();
+
+    ctx.strokeStyle =
+        color;
+
+    ctx.globalAlpha =
+        0.12;
+
+    ctx.lineWidth = 1.6;
+
+
+    ctx.beginPath();
+
+
+    for (
+        let i = 0;
+        i <= N;
+        i++
+    ) {
+
+        const t =
+            p.T * i / N;
+
+
+        const pos =
+            getPosition(
+                p,
+                t
+            );
+
+
+        const q =
+            toScreen(
+                pos.x,
+                pos.y,
+                s
+            );
+
+
+        if (i === 0) {
+
+            ctx.moveTo(
+                q.x,
+                q.y
+            );
+
+        } else {
+
+            ctx.lineTo(
+                q.x,
+                q.y
+            );
+        }
+    }
+
+
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   ACTIVE TRAJECTORY
+========================================================= */
+
+function drawActiveTrajectory(
+    p,
+    progress,
+    color,
+    s
+) {
+
+    if (p.T <= 0) {
+        return;
+    }
+
+
+    const currentTime =
+        p.T * progress;
+
+
+    const N = 180;
+
+
+    ctx.save();
+
+    ctx.strokeStyle =
+        color;
+
+    ctx.lineWidth = 2.7;
+
+    ctx.lineJoin =
+        "round";
+
+    ctx.lineCap =
+        "round";
+
+
+    ctx.beginPath();
+
+
+    for (
+        let i = 0;
+        i <= N;
+        i++
+    ) {
+
+        const t =
+            currentTime * i / N;
+
+
+        const pos =
+            getPosition(
+                p,
+                t
+            );
+
+
+        const q =
+            toScreen(
+                pos.x,
+                pos.y,
+                s
+            );
+
+
+        if (i === 0) {
+
+            ctx.moveTo(
+                q.x,
+                q.y
+            );
+
+        } else {
+
+            ctx.lineTo(
+                q.x,
+                q.y
+            );
+        }
+    }
+
+
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   Hmax AND RANGE
+========================================================= */
+
+function drawResults(
+    p,
+    color,
+    s
+) {
+
+    if (!resultToggle.checked) {
+        return;
+    }
+
+    if (p.T <= 0) {
+        return;
+    }
+
+
+    const highestPoint =
+        toScreen(
+            p.ux * p.tH,
+            p.H,
+            s
+        );
+
+
+    const hStart =
+        toScreen(
+            0,
+            p.H,
+            s
+        );
+
+
+    const rangePoint =
+        toScreen(
+            p.R,
+            0,
+            s
+        );
+
+
+    const rangeTop =
+        toScreen(
+            p.R,
+            p.H,
+            s
+        );
+
+
+    ctx.save();
+
+    ctx.strokeStyle =
+        color;
+
+    ctx.globalAlpha =
+        0.4;
+
+    ctx.lineWidth = 1;
+
+    ctx.setLineDash(
+        [5, 5]
+    );
+
+
+    /* Hmax */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        hStart.x,
+        hStart.y
+    );
+
+    ctx.lineTo(
+        highestPoint.x,
+        highestPoint.y
+    );
+
+    ctx.stroke();
+
+
+    /* Range */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        rangePoint.x,
+        rangePoint.y
+    );
+
+    ctx.lineTo(
+        rangeTop.x,
+        rangeTop.y
+    );
+
+    ctx.stroke();
+
+
+    ctx.restore();
+
+
+    /*
+        Small labels.
+    */
+
+    ctx.save();
+
+    ctx.fillStyle =
+        color;
+
+    ctx.font =
+        "bold 9px Arial";
+
+
+    ctx.fillText(
+        `H = ${p.H.toFixed(1)} m`,
+        highestPoint.x + 4,
+        highestPoint.y - 5
+    );
+
+
+    ctx.fillText(
+        `R = ${p.R.toFixed(1)} m`,
+        rangePoint.x - 18,
+        rangePoint.y - 6
+    );
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   VELOCITY VECTOR
+========================================================= */
+
+function drawVelocityVector(
+    p,
+    t,
+    color,
+    s
+) {
+
+    if (!vectorToggle.checked) {
+        return;
+    }
+
+
+    if (p.u === 0) {
+        return;
+    }
+
+
+    const state =
+        getState(
+            p,
+            t
+        );
+
+
+    const point =
+        toScreen(
+            state.x,
+            state.y,
+            s
+        );
+
+
+    /*
+        Small vector representation.
+
+        This controls ONLY visual size.
+    */
+
+    const VECTOR_SCALE = 14;
+
+
+    let vxPixels =
+        state.vx *
+        s.scaleX /
+        VECTOR_SCALE;
+
+
+    let vyPixels =
+        -state.vy *
+        s.scaleY /
+        VECTOR_SCALE;
+
+
+    /*
+        Hard visual cap.
+    */
+
+    const maxLength = 55;
+
+
+    const length =
+        Math.sqrt(
+            vxPixels * vxPixels +
+            vyPixels * vyPixels
+        );
+
+
+    if (length > maxLength) {
+
+        const factor =
+            maxLength / length;
+
+        vxPixels *= factor;
+        vyPixels *= factor;
+    }
+
+
+    if (
+        Math.abs(vxPixels) < 0.3 &&
+        Math.abs(vyPixels) < 0.3
+    ) {
+        return;
+    }
+
+
+    const endX =
+        point.x +
+        vxPixels;
+
+    const endY =
+        point.y +
+        vyPixels;
+
+
+    ctx.save();
+
+    ctx.strokeStyle =
+        color;
+
+    ctx.fillStyle =
+        color;
+
+    ctx.lineWidth = 1.8;
+
+
+    /* Main vector */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        point.x,
+        point.y
+    );
+
+    ctx.lineTo(
+        endX,
+        endY
+    );
+
+    ctx.stroke();
+
+
+    /* Arrow head */
+
+    const angle =
+        Math.atan2(
+            endY - point.y,
+            endX - point.x
+        );
+
+
+    const head = 6;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        endX,
+        endY
+    );
+
+    ctx.lineTo(
+        endX -
+        head *
+        Math.cos(
+            angle - Math.PI / 6
+        ),
+
+        endY -
+        head *
+        Math.sin(
+            angle - Math.PI / 6
+        )
+    );
+
+    ctx.lineTo(
+        endX -
+        head *
+        Math.cos(
+            angle + Math.PI / 6
+        ),
+
+        endY -
+        head *
+        Math.sin(
+            angle + Math.PI / 6
+        )
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /* Components */
+
+    if (componentToggle.checked) {
+
+        ctx.globalAlpha =
+            0.30;
+
+        ctx.setLineDash(
+            [3, 3]
+        );
+
+
+        /* Horizontal */
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            point.x,
+            point.y
+        );
+
+        ctx.lineTo(
+            endX,
+            point.y
+        );
+
+        ctx.stroke();
+
+
+        /* Vertical */
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            endX,
+            point.y
+        );
+
+        ctx.lineTo(
+            endX,
+            endY
+        );
+
+        ctx.stroke();
+    }
+
+
+    ctx.restore();
+}
+
+
+/* =========================================================
+   PROJECTILE DOT
+========================================================= */
+
+function drawProjectile(
+    p,
+    progress,
+    color,
+    number,
+    s
+) {
+
+    const t =
+        p.T * progress;
+
+
+    const pos =
+        getPosition(
+            p,
+            t
+        );
+
+
+    const point =
+        toScreen(
+            pos.x,
+            pos.y,
+            s
+        );
+
+
+    /*
+        If both projectiles are at exactly the
+        same position, separate only their visual
+        dots by a few pixels.
+    */
+
+    const offset =
+        p.u === 0
+            ? (number === 1 ? -5 : 5)
+            : 0;
+
+
+    ctx.save();
+
+    ctx.fillStyle =
+        color;
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        point.x + offset,
+        point.y - 3,
+        5.5,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+
+    drawVelocityVector(
+        p,
+        t,
+        color,
+        s
+    );
+}
+
+
+/* =========================================================
+   LIVE DATA
+========================================================= */
+
+function updateLive(
+    p,
+    progress,
+    suffix
+) {
+
+    const t =
+        p.T * progress;
+
+
+    const state =
+        getState(
+            p,
+            t
+        );
+
+
+    document.getElementById(
+        `liveT${suffix}`
+    ).textContent =
+        `${t.toFixed(2)} s`;
+
+
+    document.getElementById(
+        `liveX${suffix}`
+    ).textContent =
+        state.x.toFixed(2);
+
+
+    document.getElementById(
+        `liveY${suffix}`
+    ).textContent =
+        state.y.toFixed(2);
+
+
+    document.getElementById(
+        `liveVx${suffix}`
+    ).textContent =
+        state.vx.toFixed(2);
+
+
+    document.getElementById(
+        `liveVy${suffix}`
+    ).textContent =
+        state.vy.toFixed(2);
+
+
+    document.getElementById(
+        `liveSpeed${suffix}`
+    ).textContent =
+        `${state.speed.toFixed(2)} m/s`;
+}
+
+
+/* =========================================================
+   MAIN DRAW
+========================================================= */
+
+function draw() {
+
+    const data =
+        getData();
+
+
+    const width =
+        canvas.clientWidth;
+
+    const height =
+        canvas.clientHeight;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    scale =
+        getScale(
+            data
+        );
+
+
+    /* Grid */
+
+    drawGrid(
+        data,
+        scale
+    );
+
+
+    /* Complete paths */
+
+    drawGhostTrajectory(
+        data.p1,
+        "#e53935",
+        scale
+    );
+
+    drawGhostTrajectory(
+        data.p2,
+        "#1976d2",
+        scale
+    );
+
+
+    /* H and R */
+
+    drawResults(
+        data.p1,
+        "#e53935",
+        scale
+    );
+
+    drawResults(
+        data.p2,
+        "#1976d2",
+        scale
+    );
+
+
+    /* Animated paths */
+
+    drawActiveTrajectory(
+        data.p1,
+        animationProgress,
+        "#e53935",
+        scale
+    );
+
+    drawActiveTrajectory(
+        data.p2,
+        animationProgress,
+        "#1976d2",
+        scale
+    );
+
+
+    /* Projectiles */
+
+    drawProjectile(
+        data.p1,
+        animationProgress,
+        "#e53935",
+        1,
+        scale
+    );
+
+    drawProjectile(
+        data.p2,
+        animationProgress,
+        "#1976d2",
+        2,
+        scale
+    );
+
+
+    /* Live information */
+
+    updateLive(
+        data.p1,
+        animationProgress,
+        "1"
+    );
+
+    updateLive(
+        data.p2,
+        animationProgress,
+        "2"
+    );
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+function getAnimationDuration() {
+
+    const speed =
+        Number(
+            speedSlider.value
+        );
+
+
+    return (
+        BASE_DURATION /
+        speed
+    );
+}
+
+
+function animate(timestamp) {
+
+    if (animationStart === null) {
+
+        animationStart =
+            timestamp -
+            animationProgress *
+            getAnimationDuration();
+    }
+
+
+    if (paused) {
+        return;
+    }
+
+
+    animationProgress =
+        (
+            timestamp -
+            animationStart
+        ) /
+        getAnimationDuration();
+
+
+    if (
+        animationProgress >= 1
+    ) {
+
+        animationProgress = 1;
+
+        draw();
+
+        return;
+    }
+
+
+    draw();
+
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+function restart() {
+
+    paused = false;
+
+    animationProgress = 0;
+
+    pausedProgress = 0;
+
+    animationStart =
+        performance.now();
+
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+
+/* =========================================================
+   PAUSE
+========================================================= */
+
+function pause() {
+
+    if (paused) {
+        return;
+    }
+
+
+    paused = true;
+
+    pausedProgress =
+        animationProgress;
+}
+
+
+/* =========================================================
+   RESUME
+========================================================= */
+
+function resume() {
+
+    if (!paused) {
+        return;
+    }
+
+
+    paused = false;
+
+
+    animationStart =
+        performance.now() -
+        pausedProgress *
+        getAnimationDuration();
+
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+
+/* =========================================================
+   PARAMETER CHANGE
+========================================================= */
+
+function parameterChange() {
+
+    updateStats();
+
+    draw();
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+u1.addEventListener(
+    "input",
+    parameterChange
+);
+
+theta1.addEventListener(
+    "input",
+    parameterChange
+);
+
+u2.addEventListener(
+    "input",
+    parameterChange
+);
+
+theta2.addEventListener(
+    "input",
+    parameterChange
+);
+
+
+vectorToggle.addEventListener(
+    "change",
+    draw
+);
+
+componentToggle.addEventListener(
+    "change",
+    draw
+);
+
+resultToggle.addEventListener(
+    "change",
+    draw
+);
+
+
+speedSlider.addEventListener(
+    "input",
+    function () {
+
+        speedDisplay.textContent =
+            `${Number(
+                speedSlider.value
+            ).toFixed(2)}×`;
+    }
+);
+
+
+/* =========================================================
+   BUTTON EVENTS
+========================================================= */
+
+document.getElementById(
+    "restartBtn"
+).addEventListener(
+    "click",
+    restart
+);
+
+document.getElementById(
+    "pauseBtn"
+).addEventListener(
+    "click",
+    pause
+);
+
+document.getElementById(
+    "resumeBtn"
+).addEventListener(
+    "click",
+    resume
+);
+
+
+/* =========================================================
+   INITIALISE
+========================================================= */
+
+updateStats();
+
+resizeCanvas();
+
+restart();
+
+</script>
+
+</body>
+</html>
